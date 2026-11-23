@@ -1,10 +1,10 @@
 # Does Joining the Euro Reduce Inflation?
 
-**Evidence from a Staggered Difference-in-Differences Design, 1995–2023**
+**Theory and Panel Evidence from 28 European Countries, 1995–2023**
 
-*November 2026*
+*Independent research project in international monetary economics · November 2026*
 
-📄 **[Read the full paper (PDF)](paper.pdf)**
+📄 **[Read the full paper (PDF, 21 pages)](paper.pdf)**
 
 ---
 
@@ -12,36 +12,51 @@
 
 Joining a monetary union is often defended as a way to *import credibility*: by handing monetary policy
 to the European Central Bank, a country with a weak inflation record "ties its hands" (Giavazzi & Pagano, 1988).
-This project tests that claim empirically for the 20 countries that adopted the euro between 1999 and 2023.
+This project derives the testable implications of that argument and tests them for the 20 countries that
+adopted the euro between 1999 and 2023.
+
+## Theory
+
+- **Barro–Gordon credibility model.** Under discretion, inflation carries a bias of λαk. Delegating policy to a
+  more inflation-averse union central bank lowers it. The model predicts that the change in inflation after
+  adoption falls **one-for-one** with pre-adoption inflation.
+- **Balassa–Samuelson model.** In catching-up economies, faster productivity growth in tradables raises
+  non-tradable prices. Inside a monetary union this real appreciation must show up as **higher inflation**.
 
 ## Key findings
 
-- **No evidence that the euro reduced inflation.** No specification yields a negative effect.
-- A conventional **two-way fixed effects** model even suggests inflation rose by **+2.4 p.p.**
-  (p = 0.03; wild cluster bootstrap p = 0.04).
-- That estimate is **fragile**. It drops to zero when the sample starts in 2000 (−0.14, p = 0.84) and is
-  essentially zero for Western European countries (−0.01, p = 0.98).
-- The **event study** reveals a V-shape: countries **disinflate just before joining** (to meet the Maastricht
-  criteria) and return to their earlier inflation path afterwards. Parallel pre-trends are rejected (p < 0.001).
+| Estimator | Effect of euro adoption on inflation |
+|---|---|
+| Pooled OLS | −2.54 p.p. *** |
+| Country fixed effects | −1.33 p.p. *** |
+| **Two-way fixed effects** (country + year) | **+2.41 p.p.** ** |
+| TWFE + country-specific trends | +3.02 p.p. *** |
 
-![Event study](paper/figures/event_study.png)
+- Without year effects the euro *seems* to lower inflation, but the regression confuses the general
+  disinflation of the late 1990s with an effect of the euro. **With year effects, the sign reverses.**
+- The positive estimate is fragile: it is ≈ 0 from 2000 onwards (−0.14, p = 0.84) and for Western Europe (−0.01).
+- Countries with high initial inflation did see large declines after adoption (slope −0.73, t = −7.1),
+  but a **placebo test** shows the same decline among countries that never adopted the euro.
+- Candidates temporarily push inflation down just before joining to meet the Maastricht criterion.
 
-*Effect on inflation relative to the year before adoption. Later adopters vs never-treated EU countries, 95% CIs.*
+**Conclusion:** no robust evidence that the euro reduced inflation. The observed decline reflects common
+disinflation and mean reversion, and higher post-adoption inflation in catching-up economies fits Balassa–Samuelson.
 
-## Data & method
+![Initial inflation vs change after adoption](paper/figures/cross_section.png)
+
+![Inflation gap around adoption](paper/figures/around_adoption.png)
+
+## Data & methods
 
 | | |
 |---|---|
-| **Sample** | 28 current and former EU members, 1995–2023 (812 country-years) |
-| **Treatment** | Euro adoption, staggered across 10 cohorts (1999 → 2023) |
+| **Sample** | Balanced panel: 28 current and former EU members × 29 years = 812 observations |
+| **Treatment** | Euro adoption, 20 countries in nine cohorts (1999 → 2023) |
 | **Controls** | Sweden, Denmark, UK, Poland, Czech Republic, Hungary, Romania, Bulgaria |
 | **Outcome** | Annual CPI inflation (World Bank WDI, `FP.CPI.TOTL.ZG`) and distance from the 2% target |
-| **Estimators** | Two-way fixed effects; event study with clean (never-treated) controls |
-| **Inference** | Country-clustered standard errors + wild cluster bootstrap (Cameron, Gelbach & Miller, 2008) |
-| **Robustness** | Winsorizing, sample start, cohort exclusion, transition vs non-transition, country trends |
-
-The design accounts for recent work showing that TWFE can be biased with staggered treatment timing
-(Goodman-Bacon, 2021; de Chaisemartin & D'Haultfœuille, 2020; Sun & Abraham, 2021; Callaway & Sant'Anna, 2021).
+| **Estimators** | Pooled OLS, one-way and two-way fixed effects, country-specific trends, cross-sectional OLS with placebo |
+| **Inference** | Cluster-robust standard errors by country; HC1 robust errors in the cross-section |
+| **Robustness** | Winsorizing, sample period, cohort exclusion, transition vs non-transition, alternative outcome |
 
 ![Inflation trends](paper/figures/trends.png)
 
