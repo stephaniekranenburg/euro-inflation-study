@@ -4,139 +4,418 @@
 \usepackage{lmodern}
 \usepackage{mathpazo}
 \usepackage[margin=2.6cm]{geometry}
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs,graphicx,caption}
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{booktabs,graphicx,caption,float}
 \usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{setspace}
-\setstretch{1.15}
+\setstretch{1.2}
 \captionsetup{font=small,labelfont=bf}
-
-\title{\textbf{Does Joining the Euro Reduce Inflation?}\\[4pt]
-\large Evidence from a Staggered Difference-in-Differences Design, 1995--2023}
-\author{}
-\date{November 2026}
+\numberwithin{equation}{section}
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+\newtheorem{hypothesis}{Hypothesis}
+\theoremstyle{remark}
+\newtheorem*{proof*}{Proof}
 
 \begin{document}
-\maketitle
 
-\begin{abstract}
-\noindent
-Monetary integration is often defended as a commitment device that imports the credibility of a low-inflation central bank. I test whether adopting the euro lowered inflation, using a panel of 28 current and former EU member states from 1995 to 2023 and exploiting the staggered timing of adoption by 20 countries. A conventional two-way fixed effects (TWFE) estimator points to the opposite of the credibility hypothesis: euro adoption is associated with inflation that is about 2.4 percentage points \emph{higher} ($p=0.03$; wild cluster bootstrap $p=0.04$). This estimate is fragile. It disappears when the sample starts in 2000 or excludes Central and Eastern European transition economies, and an event-study design reveals a pronounced pre-adoption dip in inflation, consistent with countries temporarily disinflating to meet the Maastricht convergence criteria. I conclude that the data provide no support for a disinflationary effect of the euro, and that the apparent post-adoption rise in inflation among later adopters most plausibly reflects a reversion after the convergence test and real catch-up (Balassa--Samuelson) dynamics rather than a causal effect of the currency itself.
+%-------------------------------------------------------------- Title page
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Large\bfseries Does Joining the Euro Reduce Inflation?\par}
+\vspace{0.6cm}
+{\large Theory and Panel Evidence from 28 European Countries, 1995--2023\par}
+\vspace{2.5cm}
+{\normalsize Independent research project in international monetary economics\par}
+\vspace{0.4cm}
+{\normalsize November 2026\par}
+\vfill
+\begin{minipage}{0.82\linewidth}
+\small
+\textbf{Abstract.} Monetary union is often defended as a commitment device that allows high-inflation countries to import the credibility of a conservative central bank. This paper derives the testable implications of that argument in a Barro--Gordon model and contrasts them with a Balassa--Samuelson model of real convergence. I then test both using a balanced panel of 28 current and former EU member states over 1995--2023, of which 20 adopted the euro. Naive pooled and one-way fixed effects regressions suggest that adoption lowered inflation by 1.3--2.5 percentage points, but the sign reverses once common year effects are controlled for: the two-way fixed effects estimate is $+2.41$ percentage points ($p=0.026$). This estimate is itself fragile and disappears when the sample starts in 2000 or is restricted to Western European countries. A cross-sectional analysis shows that countries with high initial inflation experienced large declines after adoption, but a placebo test reveals an almost identical decline among non-adopters. I conclude that the data do not support a causal disinflationary effect of the euro; the observed decline reflects common disinflation and mean reversion, while the higher post-adoption inflation of catching-up economies is consistent with Balassa--Samuelson dynamics.
 
 \medskip
-\noindent\textbf{Keywords:} euro adoption, inflation, monetary union, difference-in-differences, event study\\
-\noindent\textbf{JEL codes:} E31, E42, E52, F33, F45
-\end{abstract}
+\textbf{Keywords:} monetary union, euro adoption, inflation bias, credibility, panel data, fixed effects\\
+\textbf{JEL classification:} E31, E52, E58, F33, F45, C23
+\end{minipage}
+\vspace{1.5cm}
+\end{titlepage}
 
+\tableofcontents
+\listoftables
+\listoffigures
+\clearpage
+
+%-------------------------------------------------------------- 1
 \section{Introduction}
 
-Since 1999, twenty European countries have replaced their national currency with the euro. Among the arguments made in favour of adoption, one of the most persistent is that membership disciplines inflation: by delegating monetary policy to the European Central Bank (ECB), a country with a history of high inflation can ``tie its hands'' and import the anti-inflationary credibility of the union \citep{giavazzi1988}. The argument has a clear theoretical basis in the time-inconsistency literature \citep{kydland1977,barro1983}, and it continues to shape the policy debate in the remaining non-euro member states.
+Since 1999, twenty European countries have replaced their national currencies with the euro. The decision to join is one of the most consequential choices a small open economy can make: it hands monetary policy to the European Central Bank (ECB), removes the nominal exchange rate as an adjustment instrument and ties the country to a common interest rate for the foreseeable future. In return, membership is expected to deliver lower transaction costs, deeper financial integration and, above all, monetary credibility.
 
-Whether adoption actually reduced inflation is an empirical question that is harder to answer than it first appears. Adoption is not random: the Maastricht Treaty requires candidates to bring inflation within 1.5 percentage points of the three best-performing member states before they may join. Countries therefore select into treatment on the outcome itself. Moreover, adoption is staggered over a quarter of a century, from the eleven founding members in 1999 to Croatia in 2023, and recent econometric work shows that conventional two-way fixed effects (TWFE) regressions can be severely biased in exactly this setting \citep{goodmanbacon2021,dechaisemartin2020}.
+The credibility argument has a precise theoretical origin. \citet{kydland1977} and \citet{barro1983jpe} show that a policymaker who cannot commit to a low-inflation rule ends up with an \emph{inflation bias}: because private agents anticipate the temptation to create surprise inflation, inflation is high in equilibrium without any gain in output. \citet{rogoff1985} shows that delegating policy to a central banker who is more inflation-averse than society reduces this bias, and \citet{giavazzi1988} apply the same logic to fixed exchange rates in the European Monetary System. Joining the euro can be understood as the most extreme form of such delegation.
 
-This paper makes three contributions. First, it assembles a transparent, fully reproducible country-year panel of CPI inflation for 28 current and former EU members. Second, it estimates the effect of euro adoption with a TWFE model and documents how sensitive that estimate is to sample choices that should not matter if the identifying assumption held. Third, it uses an event-study design restricted to later adopters, which makes the pre-adoption behaviour of inflation directly visible.
+Whether the euro actually lowered inflation in the countries that adopted it is, however, an empirical question, and one that is surprisingly difficult to answer. First, adoption is conditional on the outcome: the Maastricht Treaty only admits countries whose inflation is already close to that of the best performers. Second, the period in which the euro was introduced coincides with a global decline in inflation, which affects adopters and non-adopters alike. Third, many later adopters are catching-up economies in Central and Eastern Europe, for which theory predicts structurally higher inflation \citep{balassa1964,samuelson1964}.
 
-The main finding is negative for the credibility hypothesis. I find no specification in which euro adoption lowers inflation. The baseline TWFE estimate is positive, but it is driven by the mid-1990s disinflation of the control group and by transition economies. The event study shows that later adopters disinflated in the two years before joining and then returned to their earlier inflation path, a pattern that is better explained by the convergence criteria and by real convergence than by the currency change itself.
+This paper addresses the question in three steps. Section~\ref{sec:theory} develops a simple theoretical framework that nests the credibility mechanism and the real-convergence mechanism, and derives two competing hypotheses. Sections~\ref{sec:data} and~\ref{sec:method} describe a balanced panel of 28 European countries over 1995--2023 and a sequence of increasingly demanding panel estimators. Sections~\ref{sec:results} and~\ref{sec:robust} present the results, including a cross-sectional test of the model's prediction that countries with a larger inflation bias should gain the most, and a placebo test that turns out to be decisive.
 
-\section{Literature and hypotheses}
+The main findings are as follows. Estimates that do not control for common time shocks suggest a sizeable disinflationary effect of the euro. Once year fixed effects are included, the sign of the estimate reverses. Neither result is robust: the estimated effect is close to zero for Western European countries and for the period after 2000. Adopters with high initial inflation did experience large declines after joining, but non-adopters with similar initial inflation experienced the same decline. Taken together, the evidence does not support the view that the euro acted as a disinflationary commitment device.
 
-\paragraph{Credibility and the commitment argument.} \citet{kydland1977} and \citet{barro1983} show that a discretionary policymaker who cannot commit to low inflation ends up with an inflation bias. Pegging to, or merging with, a more credible monetary authority is one way to remove that bias. \citet{giavazzi1988} formalise this ``advantage of tying one's hands'' for the European Monetary System, and \citet{alesina2002} show that the gains from a currency union are largest for countries with a weak inflation record.
+%-------------------------------------------------------------- 2
+\section{Institutional background}\label{sec:background}
 
-\paragraph{Optimum currency areas.} \citet{mundell1961} emphasises the cost side: a common currency removes the exchange rate as an adjustment mechanism. If member states face asymmetric shocks or different growth paths, a single policy rate can be too loose for some members. \citet{rose2000} documents large trade gains from common currencies, which could themselves raise demand pressure in the periphery.
+\subsection{From Maastricht to the single currency}
+Economic and Monetary Union (EMU) was established by the Treaty on European Union, signed in Maastricht in February 1992. The Treaty set out a three-stage process that culminated on 1 January 1999, when the conversion rates of eleven national currencies were irrevocably fixed and the ECB assumed responsibility for monetary policy. Euro banknotes and coins followed on 1 January 2002. Greece joined in 2001, and enlargement continued with Slovenia (2007), Cyprus and Malta (2008), Slovakia (2009), Estonia (2011), Latvia (2014), Lithuania (2015) and Croatia (2023). Bulgaria adopted the euro on 1 January 2026, after the end of the sample period used here.
 
-\paragraph{Real convergence.} The Balassa--Samuelson effect \citep{balassa1964,samuelson1964} predicts that fast-growing, catching-up economies experience higher inflation in non-tradable sectors. Under a fixed exchange rate, this real appreciation must occur through higher inflation rather than through nominal appreciation. This mechanism is particularly relevant for the Central and Eastern European economies that joined after 2007.
+The ECB's primary objective is price stability, which it currently defines as inflation of 2\% over the medium term, measured by the Harmonised Index of Consumer Prices (HICP). Monetary policy is set for the euro area as a whole; national central banks implement it but no longer conduct independent policy.
 
-\paragraph{Hypotheses.} The credibility view implies \textbf{H1}: euro adoption reduces inflation and its distance from the ECB's 2\% objective. The optimum currency area and Balassa--Samuelson views imply the competing \textbf{H2}: adoption does not reduce, and may raise, inflation in catching-up economies.
+\subsection{The convergence criteria}
+Admission to the euro area is governed by Article~140 of the Treaty on the Functioning of the European Union and Protocol No.~13 on the convergence criteria. Let $\pi_{i}$ denote the average HICP inflation rate of candidate $i$ over the twelve months preceding the examination, and let $\pi_{(1)}, \pi_{(2)}, \pi_{(3)}$ denote the inflation rates of the three best-performing EU member states in terms of price stability. The price-stability criterion requires
+\begin{equation}
+\pi_i \;\leq\; \frac{1}{3}\sum_{j=1}^{3}\pi_{(j)} \;+\; 1.5 \text{ percentage points}.
+\label{eq:maastricht}
+\end{equation}
+Analogous conditions apply to long-term interest rates (at most 2 percentage points above the same reference group), to public finances (a deficit not exceeding 3\% and debt not exceeding 60\% of GDP, or sufficiently diminishing) and to exchange-rate stability (at least two years of participation in Exchange Rate Mechanism~II without severe tensions).
 
-\section{Data}
+Condition~\eqref{eq:maastricht} has an important implication for empirical work. Because a candidate must demonstrate low inflation in the period immediately before admission, the inflation rate observed just before adoption is not a neutral baseline: it is selected to be low. Any comparison between inflation ``just before'' and ``after'' adoption is therefore biased towards finding an increase. I return to this point in Section~\ref{sec:results}.
 
-The outcome is annual consumer price inflation (World Bank, World Development Indicators, series FP.CPI.TOTL.ZG). The sample covers 1995--2023 and 28 countries: the 20 euro adopters and 8 EU members (current or former) that kept their own currency during the whole sample: Bulgaria, the Czech Republic, Denmark, Hungary, Poland, Romania, Sweden and the United Kingdom.\footnote{Bulgaria adopted the euro on 1 January 2026, after the end of the sample, and is therefore a never-treated unit here.} Treatment starts in the year in which conversion rates became irrevocably fixed (1999 for the founding members, then Greece 2001, Slovenia 2007, Cyprus and Malta 2008, Slovakia 2009, Estonia 2011, Latvia 2014, Lithuania 2015 and Croatia 2023).
+\subsection{Countries outside the euro area}
+Eight current or former EU members kept their own currency throughout 1995--2023 and serve as the comparison group. They differ considerably in their monetary regimes. Denmark negotiated an opt-out and has participated in ERM~II since 1999, pegging the krone tightly to the euro. Bulgaria has operated a currency board since 1997, first against the Deutsche Mark and then against the euro. Sweden, the Czech Republic, Hungary, Poland and Romania pursue inflation targeting with floating exchange rates, and the United Kingdom, which left the EU in 2020, did the same under an opt-out. This heterogeneity matters: to the extent that pegging countries import euro-area monetary conditions, the comparison group partially ``receives'' the treatment, which biases any estimated effect towards zero.
 
-The mid-1990s contain episodes of very high inflation in transition economies, most notably Bulgaria in 1997. To prevent a handful of observations from dominating the estimates, the main outcome is winsorized at the 2.5th and 97.5th percentiles ($-0.5\%$ and $21.5\%$). As a second outcome I use the absolute distance from 2\%, $|\pi_{it}-2|$, which captures price stability rather than the level of inflation. Table~\ref{tab:desc} summarises the data and Figure~\ref{fig:trends} plots median inflation for three groups of countries.
+%-------------------------------------------------------------- 3
+\section{Literature review}\label{sec:literature}
+
+\paragraph{Rules, discretion and credibility.} The modern analysis of inflation bias starts with \citet{kydland1977}, who show that optimal plans are time-inconsistent when agents form expectations rationally. \citet{barro1983jpe} formalise the resulting equilibrium in a natural-rate model, and \citet{barro1983jme} show how reputation can partly substitute for formal commitment. \citet{rogoff1985} proposes delegation to a ``conservative'' central banker as a solution, trading off a lower inflation bias against weaker stabilisation of supply shocks. Applied to Europe, \citet{giavazzi1988} argue that pegging to the Deutsche Mark allowed high-inflation countries to borrow the Bundesbank's credibility, an argument that was extended to full monetary union by \citet{alesina2002}, who show that the countries that gain most from a currency union are those with a history of high inflation.
+
+\paragraph{Optimum currency areas.} The costs of monetary union are the focus of the optimum currency area (OCA) literature. \citet{mundell1961} shows that a common currency is costly when members face asymmetric shocks and labour is immobile, because a single interest rate cannot be optimal for all members. \citet{mckinnon1963} emphasises the role of openness. \citet{frankel1998} argue that the OCA criteria may be endogenous, as monetary union itself raises trade integration and business-cycle synchronisation, a mechanism supported by the large trade effects of common currencies documented by \citet{rose2000}.
+
+\paragraph{Inflation differentials in EMU.} Early evaluations found that inflation rates within the euro area remained persistently different after 1999. \citet{honohan2003} attribute the divergence in the early years largely to exchange-rate movements and differences in cyclical positions, while \citet{lane2012} shows how capital inflows into the periphery fuelled domestic demand and non-tradable price inflation before the sovereign debt crisis. For the new member states in Central and Eastern Europe, a large literature studies the Balassa--Samuelson effect; \citet{egert2006} survey the evidence and conclude that the effect is present but typically modest in size.
+
+\paragraph{Empirical methodology.} The empirical approach in this paper relies on panel data methods with unit and time fixed effects \citep{wooldridge2010,angrist2009}. \citet{bertrand2004} show that inference in such settings is severely distorted unless standard errors account for serial correlation within units, which motivates clustering by country \citep{cameron2015}. A more recent literature shows that two-way fixed effects estimators can be biased when treatment is adopted at different times and effects are heterogeneous \citep{goodmanbacon2021}; I discuss the implications of this result for the present analysis in Section~\ref{sec:discussion}.
+
+\paragraph{Contribution.} Relative to this literature, the paper makes two contributions. First, it derives a simple, testable cross-sectional prediction from the credibility model---the gain from adoption is proportional to the pre-adoption inflation bias---and confronts it with a placebo comparison. Second, it shows transparently how the conclusion depends on whether common time effects are controlled for, which helps to reconcile the popular perception of the euro as a ``disinflationary'' project with the absence of a robust effect in the data.
+
+%-------------------------------------------------------------- 4
+\section{Theoretical framework}\label{sec:theory}
+
+\subsection{The credibility channel: a Barro--Gordon model}
+Consider a small open economy $i$ with a surprise-augmented Phillips curve
+\begin{equation}
+y_t = \bar{y} + \alpha\,(\pi_t - \pi_t^e) + \varepsilon_t, \qquad \alpha>0,
+\label{eq:phillips}
+\end{equation}
+where $y_t$ is (log) output, $\bar{y}$ its natural level, $\pi_t^e$ expected inflation and $\varepsilon_t$ a supply shock with $\mathbb{E}[\varepsilon_t]=0$ and $\operatorname{Var}(\varepsilon_t)=\sigma^2_\varepsilon$. The monetary authority controls inflation directly and minimises the quadratic loss
+\begin{equation}
+L_t = \tfrac{1}{2}\pi_t^2 + \tfrac{\lambda}{2}\,(y_t - \bar{y} - k)^2, \qquad \lambda>0,\; k>0.
+\label{eq:loss}
+\end{equation}
+The parameter $\lambda$ is the weight on output stabilisation, and $k>0$ captures the authority's desire to push output above its natural level (for instance because of labour-market distortions). Expectations are formed rationally before $\varepsilon_t$ is observed.
+
+\paragraph{Discretion.} Taking $\pi_t^e$ as given, the first-order condition $\partial L_t/\partial \pi_t = 0$ gives
+\begin{equation}
+\pi_t + \lambda\alpha\,\big[\alpha(\pi_t-\pi^e_t) + \varepsilon_t - k\big] = 0
+\quad\Longrightarrow\quad
+\pi_t = \frac{\lambda\alpha^2\pi_t^e + \lambda\alpha k - \lambda\alpha\varepsilon_t}{1+\lambda\alpha^2}.
+\label{eq:foc}
+\end{equation}
+Taking expectations and imposing rational expectations, $\pi_t^e = \mathbb{E}[\pi_t]$, yields $\pi^e_t(1+\lambda\alpha^2) = \lambda\alpha^2\pi^e_t + \lambda\alpha k$, so that $\pi^e_t = \lambda\alpha k$. Substituting back,
+\begin{equation}
+\pi_t^{D} = \underbrace{\lambda\alpha k}_{\text{inflation bias}} \;-\; \frac{\lambda\alpha}{1+\lambda\alpha^2}\,\varepsilon_t,
+\qquad
+y_t^{D} = \bar{y} + \frac{1}{1+\lambda\alpha^2}\,\varepsilon_t.
+\label{eq:discretion}
+\end{equation}
+Average inflation equals the bias $\lambda\alpha k>0$, while average output is unchanged at $\bar{y}$: the attempt to exploit the Phillips curve is fully anticipated and produces only inflation.
+
+\paragraph{Delegation to a common central bank.} Suppose country $i$ joins a monetary union whose central bank has output weight $\lambda_U < \lambda_i$ and responds to the union-wide shock $\bar{\varepsilon}_t$ rather than to $\varepsilon_{it}$. Applying~\eqref{eq:discretion} to the union,
+\begin{equation}
+\pi_{it}^{U} = \lambda_U\alpha k \;-\; \frac{\lambda_U\alpha}{1+\lambda_U\alpha^2}\,\bar{\varepsilon}_t.
+\label{eq:union}
+\end{equation}
+
+\begin{proposition}[Credibility gain]\label{prop:gain}
+The expected change in inflation from joining the union is
+\begin{equation}
+\mathbb{E}\big[\pi^{U}_{it} - \pi^{D}_{it}\big] = -\alpha k\,(\lambda_i - \lambda_U) \;<\; 0 .
+\label{eq:gain}
+\end{equation}
+Because pre-adoption average inflation equals $\bar{\pi}_i^{\,pre}=\lambda_i\alpha k$, the expected change can be written as
+\begin{equation}
+\mathbb{E}\big[\Delta\bar{\pi}_i\big] = \lambda_U\alpha k - \bar{\pi}_i^{\,pre},
+\label{eq:gain2}
+\end{equation}
+which is decreasing one-for-one in the country's pre-adoption inflation.
+\end{proposition}
+
+\begin{proof*}
+Take expectations of~\eqref{eq:union} and~\eqref{eq:discretion}, using $\mathbb{E}[\varepsilon_{it}]=\mathbb{E}[\bar{\varepsilon}_t]=0$, and subtract. The second expression follows from substituting $\lambda_i\alpha k=\bar{\pi}_i^{\,pre}$. \hfill$\square$
+\end{proof*}
+
+Proposition~\ref{prop:gain} delivers a sharp testable implication: in a cross-section of adopters, a regression of the change in mean inflation on pre-adoption mean inflation should have a slope close to $-1$ and an intercept close to the union's inflation rate. The model also clarifies the cost of membership. Using~\eqref{eq:phillips} and~\eqref{eq:discretion}, the output variance under national policy is $\sigma^2_\varepsilon/(1+\lambda_i\alpha^2)^2$, whereas under union policy the idiosyncratic component $\varepsilon_{it}-\bar{\varepsilon}_t$ is no longer stabilised at all. This is the formal counterpart of the OCA argument of \citet{mundell1961}: the credibility gain must be weighed against the loss of shock absorption.
+
+\subsection{The real-convergence channel: Balassa--Samuelson}
+Now consider an economy with a tradable sector ($T$) and a non-tradable sector ($N$). Output in each sector is linear in labour, $Y_s = A_s L_s$ for $s\in\{T,N\}$, and labour is perfectly mobile between sectors, so that the nominal wage $W$ is equalised:
+\begin{equation}
+W = P_T A_T = P_N A_N
+\quad\Longrightarrow\quad
+\frac{P_N}{P_T} = \frac{A_T}{A_N}.
+\label{eq:bs1}
+\end{equation}
+Let the consumer price index be the geometric average $P = P_T^{\,1-\gamma}P_N^{\,\gamma}$, where $\gamma\in(0,1)$ is the share of non-tradables. Taking logs and time differences, and writing $\hat{x}$ for the growth rate of $x$,
+\begin{equation}
+\pi = \hat{P}_T + \gamma\big(\hat{A}_T - \hat{A}_N\big).
+\label{eq:bs2}
+\end{equation}
+Under a fixed exchange rate and the law of one price for tradables, $\hat{P}_T = \hat{P}_T^{*}$, where an asterisk denotes the rest of the union. Applying~\eqref{eq:bs2} to both regions and subtracting gives the inflation differential
+\begin{equation}
+\pi - \pi^{*} = \gamma\Big[\big(\hat{A}_T - \hat{A}_N\big) - \big(\hat{A}_T^{*} - \hat{A}_N^{*}\big)\Big].
+\label{eq:bs3}
+\end{equation}
+A catching-up economy, in which productivity growth in tradables outpaces that in the rest of the union, therefore has structurally higher inflation inside a monetary union. Outside the union, the same real appreciation could occur through a nominal appreciation of the currency; inside, it must occur through prices.
+
+\subsection{Hypotheses}
+The two mechanisms lead to competing predictions.
+
+\begin{hypothesis}[Credibility]\label{h1}
+Euro adoption reduces inflation, and the reduction is larger for countries with higher pre-adoption inflation (equation~\ref{eq:gain2}).
+\end{hypothesis}
+
+\begin{hypothesis}[Real convergence]\label{h2}
+Euro adoption does not reduce inflation in catching-up economies and may raise it relative to non-adopters, which retain the option of nominal appreciation (equation~\ref{eq:bs3}).
+\end{hypothesis}
+
+%-------------------------------------------------------------- 5
+\section{Data}\label{sec:data}
+
+\subsection{Sample and variables}
+The dependent variable is annual consumer price inflation, $\pi_{it}$, measured as the percentage change in the consumer price index (World Bank, World Development Indicators, series FP.CPI.TOTL.ZG). I use the CPI rather than the HICP because it is available on a consistent basis for all countries and years; the two indices are highly correlated at the annual frequency. The sample covers $N=28$ countries over $T=29$ years (1995--2023), yielding a balanced panel of $NT=812$ observations.
+
+The treatment indicator is
+\begin{equation}
+\text{Euro}_{it} = \mathbf{1}\big[t \geq A_i\big],
+\end{equation}
+where $A_i$ is the year in which country $i$ irrevocably fixed its conversion rate, and $A_i=\infty$ for the eight comparison countries. Twenty countries are treated at some point, in nine adoption cohorts; Table~\ref{tab:countries} in the Appendix lists them.
+
+Several transition economies experienced very high inflation in the mid-1990s, most notably Bulgaria in 1997. To prevent a handful of observations from dominating least-squares estimates, the main dependent variable is winsorized at the 2.5th and 97.5th percentiles of the pooled distribution ($-0.5\%$ and $21.5\%$). Results with the raw series are reported as a robustness check. As an alternative outcome that captures price \emph{stability} rather than the level of inflation, I also use the absolute deviation from the ECB's objective, $|\pi_{it}-2|$.
+
+\subsection{Descriptive evidence}
+Table~\ref{tab:desc} summarises the data. Mean inflation among adopters fell from 4.6\% before adoption to 2.3\% afterwards, and its standard deviation fell from 5.6 to 2.3 percentage points. A naive before--after comparison would therefore suggest a large disinflationary effect.
 
 \input{tables/descriptives.tex}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\linewidth]{figures/trends.pdf}
-\caption{Median CPI inflation by group. The dotted line marks the creation of the euro in 1999. Source: World Bank WDI; own calculations.}
+\caption{Median CPI inflation by group, 1995--2023}
 \label{fig:trends}
+\begin{minipage}{0.85\linewidth}\footnotesize\textit{Notes:} The dotted line marks the creation of the euro in 1999. Source: World Bank WDI; own calculations.\end{minipage}
 \end{figure}
 
-Figure~\ref{fig:trends} already illustrates the central identification problem. Before 1999, the non-euro group, dominated by transition economies, experienced extremely high but rapidly falling inflation, while the founding members were already close to 2\%. Any estimator that compares the change in inflation of founding members with the change in the control group over this period will mechanically attribute part of the control group's disinflation to the euro.
+Figure~\ref{fig:trends} shows why this comparison is misleading. Inflation fell sharply in the late 1990s in all groups, and most strongly among non-adopters, which were dominated by transition economies emerging from high inflation. After 2000 the three groups move closely together, including during the 2008 financial crisis and the 2021--2022 energy shock. The large decline in adopters' inflation thus coincides with a general disinflation that also affected countries that never joined.
 
-\section{Empirical strategy}
+%-------------------------------------------------------------- 6
+\section{Empirical methodology}\label{sec:method}
 
-\subsection{Two-way fixed effects}
-The baseline specification is
+\subsection{From pooled OLS to two-way fixed effects}
+The starting point is the pooled regression
+\begin{equation}
+\pi_{it} = \beta_0 + \beta\,\text{Euro}_{it} + u_{it},
+\label{eq:pooled}
+\end{equation}
+which compares adopters after adoption with all other observations. Pooled OLS is consistent only if $\mathbb{E}[u_{it}\mid \text{Euro}_{it}]=0$, which fails if adopters differ systematically from non-adopters or if adoption coincides with common shocks.
+
+To remove time-invariant country characteristics, decompose the error as $u_{it} = \alpha_i + \lambda_t + \varepsilon_{it}$ and estimate
 \begin{equation}
 \pi_{it} = \alpha_i + \lambda_t + \beta\,\text{Euro}_{it} + \varepsilon_{it},
 \label{eq:twfe}
 \end{equation}
-where $\pi_{it}$ is inflation in country $i$ and year $t$, $\alpha_i$ and $\lambda_t$ are country and year fixed effects, and $\text{Euro}_{it}$ equals one from the adoption year onwards. Country fixed effects absorb permanent differences in inflation; year fixed effects absorb common shocks such as the 2008 financial crisis and the 2021--2022 energy shock. Under parallel trends, $\beta$ is the average effect of adoption.
-
-Standard errors are clustered by country to allow for serial correlation \citep{bertrand2004}. Because there are only 28 clusters, I also report wild cluster bootstrap $p$-values with Rademacher weights and the null hypothesis imposed \citep{cameron2008}.
-
-\subsection{Event study}
-With staggered adoption, $\beta$ in \eqref{eq:twfe} is a weighted average of many two-by-two comparisons, some of which use already-treated countries as controls and can receive negative weights \citep{goodmanbacon2021,dechaisemartin2020}. To address this, I estimate a dynamic specification
+where $\alpha_i$ are country fixed effects and $\lambda_t$ year fixed effects. In a balanced panel the two-way fixed effects (TWFE) estimator is obtained by applying OLS to the two-way demeaned data. Define, for any variable $x_{it}$,
 \begin{equation}
-\pi_{it} = \alpha_i + \lambda_t + \sum_{k=-6,\,k\neq-1}^{8} \delta_k\, \mathbf{1}[t - A_i = k] + \varepsilon_{it},
-\label{eq:es}
+\ddot{x}_{it} = x_{it} - \bar{x}_{i\cdot} - \bar{x}_{\cdot t} + \bar{x}_{\cdot\cdot},
+\qquad
+\bar{x}_{i\cdot} = \tfrac{1}{T}\textstyle\sum_t x_{it},\;
+\bar{x}_{\cdot t} = \tfrac{1}{N}\textstyle\sum_i x_{it},\;
+\bar{x}_{\cdot\cdot} = \tfrac{1}{NT}\textstyle\sum_{i,t} x_{it}.
 \end{equation}
-where $A_i$ is the adoption year and the endpoints are binned. The sample is restricted to the nine later adopters, for which several pre-adoption years are observed, and to the eight never-treated countries, which serve as the only comparison group. This follows the logic of \citet{sun2021} and \citet{callaway2021}: identification comes from comparing treated cohorts with clean controls rather than with earlier-treated countries. The coefficients $\delta_k$ for $k<-1$ provide a direct test of parallel pre-trends.
+Since $\ddot{\alpha}_i = \ddot{\lambda}_t = 0$, equation~\eqref{eq:twfe} becomes $\ddot{\pi}_{it} = \beta\,\ddot{\text{Euro}}_{it} + \ddot{\varepsilon}_{it}$, and
+\begin{equation}
+\hat{\beta}_{TWFE} = \frac{\sum_{i=1}^{N}\sum_{t=1}^{T}\ddot{\text{Euro}}_{it}\,\ddot{\pi}_{it}}{\sum_{i=1}^{N}\sum_{t=1}^{T}\ddot{\text{Euro}}_{it}^{\,2}}.
+\label{eq:betahat}
+\end{equation}
+The one-way fixed effects estimator, which omits $\lambda_t$, is obtained analogously with $\ddot{x}_{it}$ replaced by $x_{it}-\bar{x}_{i\cdot}$.
 
-\section{Results}
+\subsection{Identification}
+In the potential-outcomes framework \citep{angrist2009}, let $\pi_{it}(0)$ denote inflation in the absence of the euro. The TWFE estimator has a causal interpretation under the following assumption.
+
+\begin{assumption}[Parallel trends]\label{ass:pt}
+In the absence of adoption, the expected change in inflation between any two periods $s<t$ would have been the same for adopters and non-adopters:
+\[
+\mathbb{E}\big[\pi_{it}(0) - \pi_{is}(0)\mid A_i<\infty\big] \;=\; \mathbb{E}\big[\pi_{it}(0) - \pi_{is}(0)\mid A_i=\infty\big].
+\]
+\end{assumption}
+
+In the simplest case with two groups and two periods, $\hat{\beta}_{TWFE}$ reduces to the difference-in-differences of group means,
+\begin{equation}
+\hat{\beta}_{DiD} = \big(\bar{\pi}_{\text{adopt},\,post} - \bar{\pi}_{\text{adopt},\,pre}\big) - \big(\bar{\pi}_{\text{control},\,post} - \bar{\pi}_{\text{control},\,pre}\big),
+\label{eq:did}
+\end{equation}
+which makes transparent that the comparison group's change over time serves as the counterfactual for the adopters. Assumption~\ref{ass:pt} is threatened in two ways in this application. First, the convergence criterion~\eqref{eq:maastricht} implies that adopters were \emph{required} to disinflate before joining, so their pre-adoption trend is not a free choice. Second, the comparison group contains transition economies whose inflation fell rapidly in the 1990s for reasons unrelated to the euro. The robustness analysis is designed to probe both concerns. As an additional check, I augment~\eqref{eq:twfe} with country-specific linear trends,
+\begin{equation}
+\pi_{it} = \alpha_i + \lambda_t + \delta_i\, t + \beta\,\text{Euro}_{it} + \varepsilon_{it},
+\label{eq:trends}
+\end{equation}
+which allows each country to follow its own linear path and identifies $\beta$ from deviations around that path.
+
+\subsection{Inference}
+Annual inflation is strongly serially correlated, so the errors $\varepsilon_{it}$ are unlikely to be independent within countries. Following \citet{bertrand2004} and \citet{cameron2015}, I use the cluster-robust variance estimator. Stacking the demeaned regressors of country $g$ in the $T\times K$ matrix $\ddot{\mathbf{X}}_g$ and the residuals in $\hat{\mathbf{u}}_g$,
+\begin{equation}
+\widehat{\operatorname{Var}}\big(\hat{\bm{\beta}}\big)
+= c\,\Big(\ddot{\mathbf{X}}'\ddot{\mathbf{X}}\Big)^{-1}
+\left(\sum_{g=1}^{G}\ddot{\mathbf{X}}_g'\,\hat{\mathbf{u}}_g\hat{\mathbf{u}}_g'\,\ddot{\mathbf{X}}_g\right)
+\Big(\ddot{\mathbf{X}}'\ddot{\mathbf{X}}\Big)^{-1},
+\label{eq:cluster}
+\end{equation}
+where $G=28$ is the number of clusters and $c$ is a small-sample correction. This estimator allows for arbitrary heteroskedasticity and serial correlation within each country. With only 28 clusters, inference should be interpreted with some caution. The test of Hypothesis~\ref{h1} is $H_0\!:\beta = 0$ against $H_1\!:\beta<0$; a significantly positive $\hat{\beta}$ is evidence against the credibility hypothesis and in favour of Hypothesis~\ref{h2}.
+
+\subsection{Cross-sectional test of the credibility model}
+Proposition~\ref{prop:gain} implies a regression across adopters,
+\begin{equation}
+\Delta\bar{\pi}_i = a + b\,\bar{\pi}_i^{\,pre} + e_i,
+\qquad \Delta\bar{\pi}_i \equiv \bar{\pi}_i^{\,post} - \bar{\pi}_i^{\,pre},
+\label{eq:cross}
+\end{equation}
+with the theoretical prediction $b=-1$ and $a=\lambda_U\alpha k$. A negative $\hat b$ is, however, also predicted by pure mean reversion: if $\bar{\pi}_i^{\,pre}$ is measured with transitory noise, countries that happen to have high pre-period inflation will tend to have lower inflation later regardless of any policy change. To separate the two explanations I add the eight non-adopters with a pseudo-adoption year equal to the median adoption year of the later adopters (2009) and estimate
+\begin{equation}
+\Delta\bar{\pi}_i = a + b\,\bar{\pi}_i^{\,pre} + c\,D_i + d\,\big(D_i \times \bar{\pi}_i^{\,pre}\big) + e_i,
+\label{eq:placebo}
+\end{equation}
+where $D_i=1$ for adopters. Under the credibility hypothesis, adopters should experience a \emph{steeper} decline than non-adopters with the same initial inflation, that is, $d<0$.
+
+%-------------------------------------------------------------- 7
+\section{Results}\label{sec:results}
+
+\subsection{Baseline estimates}
+Table~\ref{tab:main} reports the sequence of estimators. Pooled OLS (column~1) suggests that euro membership is associated with inflation that is 2.54 percentage points lower. Controlling for permanent country differences (column~2) reduces the estimate to $-1.33$, still significant at the 1\% level. Taken at face value, these estimates support Hypothesis~\ref{h1}.
 
 \input{tables/main.tex}
 
-Table~\ref{tab:main} reports the TWFE estimates. Column (1) shows that euro adoption is associated with inflation that is 2.41 percentage points higher, significant at the 5\% level with clustered standard errors ($p=0.026$) and with the wild bootstrap ($p=0.042$). The estimate is similar when the pandemic and energy-shock years are excluded (column 2). Columns (3) and (4) show that adoption is also associated with a larger, not smaller, distance from the 2\% objective. Taken at face value, these results reject H1.
+The picture changes once year fixed effects are added. In column~(3) the TWFE estimate is $+2.41$ percentage points with a clustered standard error of 1.08 ($p=0.026$): relative to non-adopters in the same year, adopters had \emph{higher} inflation after joining. Allowing for country-specific linear trends (column~4) strengthens this result to $+3.02$ percentage points. The reversal from column~(2) to column~(3) is the central empirical lesson of the paper. Without year effects, the regression attributes the general disinflation of the late 1990s and early 2000s to the euro, because most euro-years fall in the low-inflation period. Year fixed effects remove this common component, and what remains is a comparison between adopters and non-adopters in the same year.
 
-\begin{figure}[t]
+Formally, the one-sided test of Hypothesis~\ref{h1} ($H_1\!:\beta<0$) cannot reject $H_0$ in columns~(3) and~(4); the point estimates have the opposite sign. The evidence is thus, at first sight, more consistent with Hypothesis~\ref{h2}.
+
+\subsection{The pattern around adoption}
+Figure~\ref{fig:around} shows the average inflation gap between the nine later adopters and the non-euro countries in the same calendar year, by years relative to adoption. Three to five years before adoption, adopters' inflation was on average 0.6 percentage points below that of non-adopters. In the two years before joining, the gap widened to $-1.9$ percentage points, as candidates brought inflation down to satisfy criterion~\eqref{eq:maastricht}. After adoption the gap returned to $-0.5$ percentage points, close to its earlier level.
+
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\linewidth]{figures/event_study.pdf}
-\caption{Event-study estimates of $\delta_k$ from equation~\eqref{eq:es}, later adopters versus never-treated countries, with 95\% confidence intervals (clustered by country). The year before adoption ($k=-1$) is the reference category.}
-\label{fig:es}
+\includegraphics[width=0.85\linewidth]{figures/around_adoption.pdf}
+\caption{Inflation gap between later adopters and non-euro EU countries around adoption}
+\label{fig:around}
+\begin{minipage}{0.85\linewidth}\footnotesize\textit{Notes:} Average of $\pi_{it}-\bar{\pi}^{\,control}_t$ across the nine countries that adopted the euro after 1999, by years relative to adoption. Grey bars: before adoption; blue bars: from the adoption year onwards. Winsorized inflation.\end{minipage}
 \end{figure}
 
-Figure~\ref{fig:es} shows why they should not be taken at face value. Relative to the year before adoption, later adopters had inflation roughly 2 percentage points higher four to five years before joining. Inflation then fell sharply in the two years before adoption, and rose again to a level about 1.4--2.8 points above the reference year afterwards. The pre-adoption coefficients are jointly significant ($p<0.001$), so the parallel-trends assumption is clearly violated. The average post-adoption coefficient (1.85) is of the same order as the average pre-adoption coefficient (1.19). The most natural interpretation is not that the euro raised inflation, but that candidates temporarily compressed inflation to pass the Maastricht test, which makes the year before adoption an unusually low reference point.
+This pattern explains why a comparison with the years immediately before adoption overstates the post-adoption ``rise'' in inflation: the reference point is artificially low by design. It also suggests that adoption did not permanently change adopters' inflation relative to non-adopters; the dip is temporary and coincides with the convergence examination.
 
-\section{Robustness}
+\subsection{Does the credibility model fit the cross-section?}
+Table~\ref{tab:cross} estimates equations~\eqref{eq:cross} and~\eqref{eq:placebo}, and Figure~\ref{fig:cross} plots the data. Among the 20 adopters, the slope is $\hat b = -0.73$ (robust standard error 0.10, $t=-7.1$), and the intercept of 2.0 is close to the ECB's objective. At first glance this is a striking confirmation of Proposition~\ref{prop:gain}: countries with high initial inflation experienced much larger declines, and the slope is not far from the theoretical value of $-1$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.75\linewidth]{figures/cross_section.pdf}
+\caption{Pre-adoption inflation and the change in inflation after adoption}
+\label{fig:cross}
+\begin{minipage}{0.75\linewidth}\footnotesize\textit{Notes:} Each point is one adopter. The line is the OLS fit of equation~\eqref{eq:cross}. Winsorized inflation.\end{minipage}
+\end{figure}
+
+\input{tables/cross.tex}
+
+The placebo test in column~(2) overturns this interpretation. Non-adopters show an almost identical relationship between initial inflation and the subsequent change: the common slope is $-0.79$, while the additional slope for adopters, $\hat d=0.06$ (standard error 0.11, $p=0.62$), is small, positive and statistically indistinguishable from zero. The adopter dummy is also insignificant ($\hat c = 0.07$, $p=0.91$). Countries with high initial inflation converged towards low inflation whether or not they adopted the euro. The cross-sectional pattern is therefore explained by general disinflation and mean reversion, not by the credibility mechanism.
+
+%-------------------------------------------------------------- 8
+\section{Robustness}\label{sec:robust}
+
+Table~\ref{tab:rob} examines whether the positive TWFE estimate survives alternative choices. Without winsorizing (column~1) the estimate is very large and imprecise, driven by the hyperinflation episodes of the 1990s. Excluding the pandemic and energy-shock years (column~2) leaves the estimate essentially unchanged at $+2.68$. However, starting the sample in 2000 (column~3), after the transition disinflation, reduces the estimate to $-0.14$ ($p=0.84$). Dropping the eleven founding members (column~4) also produces a small and insignificant estimate.
 
 \input{tables/robustness.tex}
 
-Table~\ref{tab:rob} shows that the baseline result depends on the choices that Figure~\ref{fig:trends} flagged as problematic. Without winsorizing (column 1), the point estimate becomes very large and imprecise, driven by hyperinflation episodes. Starting the sample in 2000, after the transition disinflation of the controls, reduces the estimate to essentially zero ($-0.14$, $p=0.84$). Dropping the founding members (column 3) also yields a small and insignificant coefficient. Splitting the sample shows that any positive association is confined to transition economies (column 4), while the effect among Western European countries is essentially zero (column 5). Allowing each country its own linear trend (column 6) produces a positive and significant estimate, but linear trends cannot capture the V-shaped pre-adoption pattern in Figure~\ref{fig:es}, so this specification does not restore credible identification.
+The split in columns~(5) and~(6) is particularly informative. Among the Central and Eastern European transition economies, the point estimate is positive ($+1.25$) but imprecise; among the remaining countries it is essentially zero ($-0.01$, standard error 0.49). The positive baseline estimate is thus driven by the early years of the sample and by transition economies. Finally, column~(7) shows that the result for the distance from the 2\% objective mirrors the result for the level of inflation.
 
-\section{Discussion and limitations}
+The overall pattern is clear. There is no specification in which euro adoption robustly lowers inflation. The positive estimates that appear in some specifications are concentrated in the period and group of countries for which the comparison group is least credible, and in which Balassa--Samuelson effects are most likely to operate.
 
-The evidence does not support the view that the euro acted as a disinflationary commitment device for the countries that adopted it. For the founding members, inflation was already low before 1999 and did not change relative to comparable non-members. For later adopters, inflation after adoption was higher than in the immediate pre-adoption years, but not higher than before the convergence period. This pattern fits H2: the Maastricht criteria induce a temporary disinflation, and catching-up economies such as the Baltic states then return to higher inflation, in line with Balassa--Samuelson effects and the loss of nominal exchange-rate appreciation as an adjustment channel \citep{mundell1961,balassa1964}.
+%-------------------------------------------------------------- 9
+\section{Discussion and limitations}\label{sec:discussion}
 
-Several limitations apply. First, treatment is endogenous by design, since the convergence criteria condition adoption on recent inflation; no estimator based on observational timing alone can fully solve this. Second, with 28 countries and only 8 controls, inference rests on few clusters, which is why I report wild bootstrap $p$-values. Third, several control countries operated fixed or tightly managed exchange rates (Denmark in ERM~II, Bulgaria under a currency board), which may bias any effect towards zero. A natural extension is a synthetic control analysis for individual adopters, or a design that exploits the timing of the formal Council decision rather than the adoption date.
+\paragraph{Interpretation.} The evidence rejects the strong version of the credibility hypothesis. For the founding members, inflation was already low before 1999 and did not change relative to comparable non-members. For the later adopters, inflation after joining was higher than in the years immediately before, but this reflects the temporary disinflation required by the convergence criteria rather than a deterioration caused by the euro. Where a positive effect appears, it is concentrated among catching-up economies such as the Baltic states, in line with the Balassa--Samuelson mechanism of equation~\eqref{eq:bs3}, which predicts that real appreciation inside a monetary union takes the form of higher inflation.
 
-\section{Conclusion}
+A useful way to reconcile these results with the credibility literature is to note that by the late 1990s most European countries had already adopted independent, inflation-targeting central banks. In terms of the model, $\lambda_i$ had already fallen towards $\lambda_U$ before adoption, so the remaining credibility gain $\alpha k(\lambda_i-\lambda_U)$ was small. The euro may have consolidated a disinflation that had already taken place, rather than caused it.
 
-Using a panel of 28 European countries from 1995 to 2023, I find no evidence that adopting the euro reduced inflation. A naive two-way fixed effects estimate suggests the opposite, but this result is not robust and reflects the disinflation of the control group in the 1990s and a pronounced pre-adoption dip among later adopters. The broader lesson is methodological as much as economic: when countries select into a policy on the basis of the outcome, and adopt it at different times, a single TWFE coefficient can tell a misleading story, and examining the dynamics around adoption is essential.
+\paragraph{Limitations.} Several caveats apply. First, adoption is endogenous by construction, since criterion~\eqref{eq:maastricht} conditions entry on recent inflation; no estimator based on adoption timing alone can fully solve this problem. Second, with 28 countries and only eight controls, inference relies on a small number of clusters, and cluster-robust standard errors may be too small \citep{cameron2015}. Third, several control countries pegged to the euro (Denmark, Bulgaria), which biases estimates towards zero. Fourth, \citet{goodmanbacon2021} shows that, when adoption is staggered and effects differ across cohorts, the TWFE estimator is a weighted average of many two-by-two comparisons, some of which use earlier adopters as controls; the coefficient in equation~\eqref{eq:twfe} should therefore be read as a summary measure rather than as a clean average treatment effect. Finally, the CPI used here differs from the HICP used in the convergence criteria.
+
+\paragraph{Extensions.} A natural extension is a synthetic control analysis for individual adopters \citep{abadie2010}, which would construct a tailored counterfactual for, for instance, Slovakia or Estonia from a weighted combination of non-adopters. A second extension would decompose inflation into tradable and non-tradable components to test equation~\eqref{eq:bs3} directly.
+
+%-------------------------------------------------------------- 10
+\section{Conclusion}\label{sec:conclusion}
+
+This paper asked whether joining the euro reduced inflation. A Barro--Gordon model predicts that it should, and that the gain should be largest for countries with the highest initial inflation; a Balassa--Samuelson model predicts that catching-up economies will instead experience higher inflation inside a monetary union. Using a balanced panel of 28 European countries over 1995--2023, I find that naive estimators support the credibility view, but only because they confuse a general disinflation with an effect of the euro. Once common year effects are removed, the estimated effect is positive, fragile and concentrated among transition economies. The cross-sectional relationship between initial inflation and subsequent disinflation, which appears to confirm the credibility model, is equally present among countries that never adopted the euro.
+
+The broader lesson is methodological as much as economic. When countries select into a policy on the basis of the outcome, and the policy is introduced during a period of common change, the choice of comparison group and the treatment of time effects determine the answer. Careful use of fixed effects, placebo comparisons and an explicit theoretical framework is essential to avoid attributing to a policy what would have happened anyway.
 
 \medskip
-\noindent\small\textit{Replication:} all data, code and tables are available in the accompanying GitHub repository; \texttt{python analysis.py} reproduces every number in this paper.
+\noindent\textit{Replication.} All data, code and tables are available in the accompanying GitHub repository; running \texttt{python analysis.py} reproduces every number in this paper.
 
-\bibliographystyle{plainnat}
+%-------------------------------------------------------------- References
+\clearpage
 \begin{thebibliography}{99}\small
+\bibitem[Abadie et~al.(2010)]{abadie2010} Abadie, A., Diamond, A., and Hainmueller, J. (2010). Synthetic control methods for comparative case studies: Estimating the effect of California's tobacco control program. \textit{Journal of the American Statistical Association}, 105(490), 493--505.
 \bibitem[Alesina and Barro(2002)]{alesina2002} Alesina, A., and Barro, R. J. (2002). Currency unions. \textit{Quarterly Journal of Economics}, 117(2), 409--436.
+\bibitem[Angrist and Pischke(2009)]{angrist2009} Angrist, J. D., and Pischke, J.-S. (2009). \textit{Mostly Harmless Econometrics: An Empiricist's Companion}. Princeton University Press.
 \bibitem[Balassa(1964)]{balassa1964} Balassa, B. (1964). The purchasing-power parity doctrine: A reappraisal. \textit{Journal of Political Economy}, 72(6), 584--596.
-\bibitem[Barro and Gordon(1983)]{barro1983} Barro, R. J., and Gordon, D. B. (1983). Rules, discretion and reputation in a model of monetary policy. \textit{Journal of Monetary Economics}, 12(1), 101--121.
+\bibitem[Barro and Gordon(1983a)]{barro1983jpe} Barro, R. J., and Gordon, D. B. (1983a). A positive theory of monetary policy in a natural rate model. \textit{Journal of Political Economy}, 91(4), 589--610.
+\bibitem[Barro and Gordon(1983b)]{barro1983jme} Barro, R. J., and Gordon, D. B. (1983b). Rules, discretion and reputation in a model of monetary policy. \textit{Journal of Monetary Economics}, 12(1), 101--121.
 \bibitem[Bertrand et~al.(2004)]{bertrand2004} Bertrand, M., Duflo, E., and Mullainathan, S. (2004). How much should we trust differences-in-differences estimates? \textit{Quarterly Journal of Economics}, 119(1), 249--275.
-\bibitem[Callaway and Sant'Anna(2021)]{callaway2021} Callaway, B., and Sant'Anna, P. H. C. (2021). Difference-in-differences with multiple time periods. \textit{Journal of Econometrics}, 225(2), 200--230.
-\bibitem[Cameron et~al.(2008)]{cameron2008} Cameron, A. C., Gelbach, J. B., and Miller, D. L. (2008). Bootstrap-based improvements for inference with clustered errors. \textit{Review of Economics and Statistics}, 90(3), 414--427.
-\bibitem[de Chaisemartin and D'Haultf{\oe}uille(2020)]{dechaisemartin2020} de Chaisemartin, C., and D'Haultf{\oe}uille, X. (2020). Two-way fixed effects estimators with heterogeneous treatment effects. \textit{American Economic Review}, 110(9), 2964--2996.
+\bibitem[Cameron and Miller(2015)]{cameron2015} Cameron, A. C., and Miller, D. L. (2015). A practitioner's guide to cluster-robust inference. \textit{Journal of Human Resources}, 50(2), 317--372.
+\bibitem[{\'E}gert et~al.(2006)]{egert2006} {\'E}gert, B., Halpern, L., and MacDonald, R. (2006). Equilibrium exchange rates in transition economies: Taking stock of the issues. \textit{Journal of Economic Surveys}, 20(2), 257--324.
+\bibitem[Frankel and Rose(1998)]{frankel1998} Frankel, J. A., and Rose, A. K. (1998). The endogeneity of the optimum currency area criteria. \textit{Economic Journal}, 108(449), 1009--1025.
 \bibitem[Giavazzi and Pagano(1988)]{giavazzi1988} Giavazzi, F., and Pagano, M. (1988). The advantage of tying one's hands: EMS discipline and central bank credibility. \textit{European Economic Review}, 32(5), 1055--1075.
 \bibitem[Goodman-Bacon(2021)]{goodmanbacon2021} Goodman-Bacon, A. (2021). Difference-in-differences with variation in treatment timing. \textit{Journal of Econometrics}, 225(2), 254--277.
+\bibitem[Honohan and Lane(2003)]{honohan2003} Honohan, P., and Lane, P. R. (2003). Divergent inflation rates in EMU. \textit{Economic Policy}, 18(37), 357--394.
 \bibitem[Kydland and Prescott(1977)]{kydland1977} Kydland, F. E., and Prescott, E. C. (1977). Rules rather than discretion: The inconsistency of optimal plans. \textit{Journal of Political Economy}, 85(3), 473--491.
+\bibitem[Lane(2012)]{lane2012} Lane, P. R. (2012). The European sovereign debt crisis. \textit{Journal of Economic Perspectives}, 26(3), 49--68.
+\bibitem[McKinnon(1963)]{mckinnon1963} McKinnon, R. I. (1963). Optimum currency areas. \textit{American Economic Review}, 53(4), 717--725.
 \bibitem[Mundell(1961)]{mundell1961} Mundell, R. A. (1961). A theory of optimum currency areas. \textit{American Economic Review}, 51(4), 657--665.
+\bibitem[Rogoff(1985)]{rogoff1985} Rogoff, K. (1985). The optimal degree of commitment to an intermediate monetary target. \textit{Quarterly Journal of Economics}, 100(4), 1169--1189.
 \bibitem[Rose(2000)]{rose2000} Rose, A. K. (2000). One money, one market: The effect of common currencies on trade. \textit{Economic Policy}, 15(30), 7--45.
 \bibitem[Samuelson(1964)]{samuelson1964} Samuelson, P. A. (1964). Theoretical notes on trade problems. \textit{Review of Economics and Statistics}, 46(2), 145--154.
-\bibitem[Sun and Abraham(2021)]{sun2021} Sun, L., and Abraham, S. (2021). Estimating dynamic treatment effects in event studies with heterogeneous treatment effects. \textit{Journal of Econometrics}, 225(2), 175--199.
-\bibitem[World Bank(2024)]{wdi} World Bank (2024). \textit{World Development Indicators}: Inflation, consumer prices (annual \%), FP.CPI.TOTL.ZG. Washington, DC.
+\bibitem[Wooldridge(2010)]{wooldridge2010} Wooldridge, J. M. (2010). \textit{Econometric Analysis of Cross Section and Panel Data} (2nd ed.). MIT Press.
+\bibitem[World Bank(2024)]{wdi} World Bank (2024). \textit{World Development Indicators}: Inflation, consumer prices (annual \%), series FP.CPI.TOTL.ZG. Washington, DC.
 \end{thebibliography}
+
+%-------------------------------------------------------------- Appendix
+\clearpage
+\appendix
+\section{Appendix}
+
+\subsection{Country sample}
+\input{tables/countries.tex}
+
+\subsection{Derivation of the loss under discretion and commitment}
+Substituting the equilibrium~\eqref{eq:discretion} into the loss function~\eqref{eq:loss} and taking expectations gives the expected loss under discretion,
+\begin{equation}
+\mathbb{E}\big[L^{D}\big] = \tfrac{1}{2}(\lambda\alpha k)^2 + \tfrac{\lambda}{2}k^2 + \frac{\lambda}{2}\,\frac{\sigma^2_\varepsilon}{1+\lambda\alpha^2}.
+\end{equation}
+Under a credible rule that sets $\pi_t = -\tfrac{\lambda\alpha}{1+\lambda\alpha^2}\varepsilon_t$ (stabilisation without bias), expectations are $\pi^e_t=0$ and
+\begin{equation}
+\mathbb{E}\big[L^{C}\big] = \tfrac{\lambda}{2}k^2 + \frac{\lambda}{2}\,\frac{\sigma^2_\varepsilon}{1+\lambda\alpha^2},
+\end{equation}
+so that $\mathbb{E}[L^{D}]-\mathbb{E}[L^{C}] = \tfrac{1}{2}(\lambda\alpha k)^2>0$. The welfare cost of discretion is the square of the inflation bias, and it is increasing in $\lambda$ and $k$. Joining a union with $\lambda_U<\lambda_i$ reduces this cost to $\tfrac{1}{2}(\lambda_U\alpha k)^2$ but forgoes stabilisation of the idiosyncratic shock $\varepsilon_{it}-\bar{\varepsilon}_t$.
+
+\subsection{Equivalence of TWFE and two-by-two difference-in-differences}
+Consider two groups ($g\in\{0,1\}$) and two periods ($t\in\{0,1\}$), with $\text{Euro}_{gt}=g\cdot t$. With one observation per cell, the two-way demeaned regressor is $\ddot{\text{Euro}}_{gt} = g t - \tfrac{g}{2} - \tfrac{t}{2} + \tfrac{1}{4}$, which equals $+\tfrac14$ in cells $(0,0)$ and $(1,1)$ and $-\tfrac14$ otherwise. Substituting into~\eqref{eq:betahat},
+\[
+\hat{\beta} = \frac{\tfrac14\big(\pi_{11}+\pi_{00}-\pi_{10}-\pi_{01}\big)}{4\cdot\tfrac1{16}}
+= \big(\pi_{11}-\pi_{10}\big) - \big(\pi_{01}-\pi_{00}\big),
+\]
+which is the difference-in-differences of equation~\eqref{eq:did}.
 
 \end{document}
