@@ -1,0 +1,20 @@
+\begin{table}[t]\centering\small
+\caption{Effect of euro adoption on inflation: two-way fixed effects}\label{tab:main}
+\begin{tabular}{lcccc}
+\toprule
+ & (1) & (2) & (3) & (4) \\
+ & Inflation & Inflation & $|\pi-2|$ & $|\pi-2|$ \\
+\midrule
+Euro adoption & $2.412^{**}$ & $2.675^{**}$ & $2.393^{**}$ & $2.698^{**}$ \\
+ & (1.080) & (1.158) & (1.042) & (1.117) \\[2pt]
+Wild bootstrap $p$-value & 0.042 & 0.017 & 0.022 & 0.022 \\
+Mean of dep.\ variable & 3.68 & 3.45 & 2.53 & 2.37 \\
+\midrule
+Country FE & Yes & Yes & Yes & Yes \\
+Year FE & Yes & Yes & Yes & Yes \\
+Countries & 28 & 28 & 28 & 28 \\
+Observations & 812 & 700 & 812 & 700 \\
+\bottomrule
+\end{tabular}
+\begin{minipage}{0.94\linewidth}\vspace{4pt}\footnotesize\textit{Notes:} Dependent variable in (1)--(2) is annual CPI inflation in percentage points, winsorized at the 2.5th and 97.5th percentiles (-0.5\% and 21.5\%); in (3)--(4) the absolute distance between inflation and 2\%. Columns (2) and (4) end the sample in 2019, before the pandemic and energy shock. Standard errors clustered by country in parentheses. The wild cluster bootstrap $p$-value uses 999 Rademacher draws with the null imposed. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.\end{minipage}
+\end{table}
